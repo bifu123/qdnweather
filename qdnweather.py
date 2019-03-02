@@ -7,8 +7,9 @@ import os
 import hashlib
 import sys
 
+
 sys.path.append('/home/test/python/test/class')#加载类文件夹
-from mainclass import WriteToLog #引用类及其方法
+from mainclass import allMethod #引用类及其方法
 
 '''
 dt=datetime.now()
@@ -52,15 +53,21 @@ def getData():
 
 
 #save to csv
+msg=''
+
 if os.path.exists('黔东南州空气质量.csv')==True:
     old_df=pd.read_csv('黔东南州空气质量.csv',encoding='utf-8_sig')
     if len(old_df[(old_df.flag==getData()[1])].index.tolist())==0: #判断日期是否是今天
         df=getData()[0] #调用爬取函数
         df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig',mode='a',header=False)#追加
-        WriteToLog().WriteTo(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 爬取成功！')
+        msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 爬取成功！'
     else:
-        WriteToLog().WriteTo(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！')
+        msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！'
 else:
     df=getData()[0]
     df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig')#创建并写入
-    WriteToLog().WriteTo(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！')
+    msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！'
+
+x=allMethod(msg)
+x.WriteTo()
+x.mailto()
