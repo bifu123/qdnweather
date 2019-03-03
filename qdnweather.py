@@ -68,6 +68,7 @@ else:
     df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig')#创建并写入
     msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！'
 
-x=allMethod(msg)
-x.WriteTo()
-x.mailto()
+if __name__ == "__main__":
+    x=allMethod(msg)
+    x.WriteTo()
+    x.mailto()
