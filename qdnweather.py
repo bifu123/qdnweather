@@ -62,13 +62,13 @@ if os.path.exists('黔东南州空气质量.csv')==True:
         df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig',mode='a',header=False)#追加
         msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 爬取成功！'
     else:
-        msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！'
+        msg='<font color=red>'+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！</font>'
 else:
     df=getData()[0]
     df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig')#创建并写入
     msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！'
 
 if __name__ == "__main__":
-    x=allMethod(msg)
+    x=allMethod("<font color=red>"+msg+":<br><img src=\"cid:weekly\" border=\"0\"><br>详细内容见附件。</font>")#注意插入图片的写法，是基于html的
     x.WriteTo()
     x.mailto()
