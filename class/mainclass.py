@@ -57,7 +57,7 @@ class allMethod(object):
         #发送方信息
         message['From'] = sender 
         #接受方信息     
-        message['To'] = ",".join(receivers) #网易邮箱的收件人是字符类型，用,分隔，所以必须把list转为字符
+        message['To'] = ",".join(receivers) #网易邮箱的收件人是字符类型，用,分隔，所以必须把list转为字符，要不就只能在上面定义为字符串，再发送方法那里再搞成LIST
 
         #登录并发送邮件
         try:
