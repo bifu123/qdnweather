@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import hashlib
 import sys
+import time
 
 
 sys.path.append('/home/test/python/test/class')#加载类文件夹
@@ -15,18 +16,19 @@ from mainclass import allMethod #引用类及其方法
 dt=datetime.now()
 dt=dt.strftime('%Y-%m-%d')
 '''
-
-        
-def getData():
+def getUrl():
     #get url
     res_tmp= requests.get("http://www.qdnhb.gov.cn/hjjc/kqzl.htm")
     res_tmp.encoding='utf-8'
     soup_tmp=BeautifulSoup(res_tmp.text,'lxml')
     url_tmp=soup_tmp.find_all('a',class_='c12176')[0]
     url_tmp=url_tmp.get('href').replace('..','http://www.qdnhb.gov.cn')
-
+    return url_tmp
+        
+def getData():
+    
     #get table
-    res = requests.get(url_tmp)
+    res = requests.get(getUrl())
     res.encoding='utf-8'
     soup = BeautifulSoup(res.text,'lxml')
     tables = soup.find_all('table')
@@ -60,15 +62,25 @@ if os.path.exists('黔东南州空气质量.csv')==True:
     if len(old_df[(old_df.flag==getData()[1])].index.tolist())==0: #判断日期是否是今天
         df=getData()[0] #调用爬取函数
         df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig',mode='a',header=False)#追加
-        msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 爬取成功！'
+        #msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 爬取成功！'
+        msg='爬取成功！'
     else:
-        msg='<font color=red>'+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！</font>'
+        #msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 目标网站无更新，放弃爬取！'
+        msg='目标网站无更新，放弃爬取！'
 else:
     df=getData()[0]
     df.to_csv('黔东南州空气质量.csv',encoding='utf-8_sig')#创建并写入
-    msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！'
+    #msg=datetime.now().strftime('%Y-%m-%d %H:%M:%S')+' 创建日志，爬取成功！'
+    msg='创建日志，爬取成功！'
 
 if __name__ == "__main__":
-    x=allMethod("<font color=red>"+msg+":<br><img src=\"cid:weekly\" border=\"0\"><br>详细内容见附件。</font>")#注意插入图片的写法，是基于html的
+    x=allMethod("<font color=red>"+msg+":<br><img src=\"cid:weekly\" border=\"0\"><br>详细内容见附件。</font>")
+    x.take_screenshot(getUrl()) 
+    print("截图完成") 
+    time.sleep(3)
     x.WriteTo()
+    print("写入日志")
+
     x.mailto()
+    print("发送邮件")
+    
